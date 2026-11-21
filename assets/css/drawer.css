@@ -259,3 +259,5 @@ html:has(.rq.on){scrollbar-gutter:stable}
 @media (max-width:420px){.rq-tab{font-size:20px}}
 /* small caps labels use DM Sans like "REQUEST NO." in the Paper frame */
 .rq-li .lb,.rq-pl,.rq-sc .hd,.rq-done .rq-nx .h{font-family:"DM Sans",system-ui,sans-serif;font-weight:600;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted,#5b6472)}
+/* Send request CTA: 32px tall, 16px text (also while it shows "Sending your request…") */
+.rq-f2 .rq-btn[data-act="send"],.rq-f2 .rq-btn.busy{height:32px;font-size:16px;line-height:1}
