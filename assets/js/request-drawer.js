@@ -286,10 +286,10 @@
     tab = 'request';
     var lnk = function (t) { return '<a class="rq-chip" href="' + ROOT + 'products.html">' + t + '</a>'; };
     box.innerHTML = tabsHeader('Your request') + subHeader() +
-      '<div class="rq-b"><div class="rq-em"><span class="ic">' + IC.box + '</span><h3>Your request is empty</h3>' +
+      '<div class="rq-b is-empty"><div class="rq-em"><span class="ic">' + IC.box + '</span><h3>Your request is empty</h3>' +
       '<p>Add cups, boxes or bags by the carton. You\'ll get exact pricing and delivery on WhatsApp, with no payment now.</p>' +
       '<div class="rq-chips">' + lnk('Cups &amp; lids') + lnk('Boxes') + lnk('Bags') + lnk('Cutlery &amp; napkins') + '</div></div></div>' +
-      '<div class="rq-f2"><a class="rq-btn blue" href="' + ROOT + 'products.html">Browse all products' + IC.arrow + '</a><div class="rq-note">Free delivery over 50 cartons</div></div>';
+      '<div class="rq-f2"><a class="rq-btn blue" href="' + ROOT + 'products.html">Browse all products' + IC.arrow + '</a><div class="rq-note">Free delivery over 50 cartons · Pay by bank transfer or LPO</div></div>';
     announce('Your request is empty');
   }
 
@@ -352,7 +352,7 @@
     var foot = ids.length
       ? '<div class="rq-f2">' + (toAdd.length ? '<button class="rq-btn" data-act="wall">Add ' + plural(toAdd.length, 'saved item') + ' to request' + IC.arrow + '</button>' : '<button class="rq-btn" data-act="tab-request">Back to your request' + IC.arrow + '</button>') + '<div class="rq-note">Saved on this device.</div></div>'
       : '<div class="rq-f2"><a class="rq-btn blue" href="' + ROOT + 'products.html">Browse all products' + IC.arrow + '</a></div>';
-    box.innerHTML = tabsHeader('Wishlist') + subHeader() + '<div class="rq-b">' + body + '</div>' + foot;
+    box.innerHTML = tabsHeader('Wishlist') + subHeader() + '<div class="rq-b' + (ids.length ? '' : ' is-empty') + '">' + body + '</div>' + foot;
     announce(plural(ids.length, 'saved item'));
   }
 

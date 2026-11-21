@@ -227,3 +227,35 @@ html:has(.rq.on){scrollbar-gutter:stable}
 .rq-sc .hd .rq-ul{font-family:"DM Sans",system-ui,sans-serif;letter-spacing:0;text-transform:none}
 .rq-done .rq-nx .h{font:500 12px "DM Mono",monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--muted,#5b6472)}
 @media (max-width:420px){.rq-h2{padding-left:16px;padding-right:16px}.rq-sub{padding-left:16px;padding-right:16px;letter-spacing:.04em}.rq-b{padding-left:16px;padding-right:16px}.rq-f2{padding-left:16px;padding-right:16px}}
+/* ===== refinements from the zoomed Paper frame (30px gutters, larger tabs, centred empty state) ===== */
+.rq-h{padding:0 30px}
+.rq-b{padding:24px 30px}
+.rq-f{padding:16px 30px 20px}
+.rq-h2{padding:22px 30px 0}
+.rq-tab{font-size:22px;color:#8a94a6}
+.rq-tab:hover,.rq-tab.on{color:var(--navy,#101b3c)}
+.rq-tab.on:after{height:3px}
+.rq-tab sup{position:relative;top:-6px;margin-left:6px;font-size:14px;font-weight:600;color:#8a94a6}
+.rq-sub{padding:14px 30px;border-top:0;font:600 12px "DM Sans",system-ui,sans-serif;letter-spacing:.1em}
+.rq-sub b{font-weight:700;margin-left:10px}
+.rq-sub em{font-weight:400;font-size:14px;margin-left:10px;color:var(--muted,#5b6472)}
+.rq-f2{padding:19px 30px 22px}
+.rq-note{font-size:13px}
+.rq-b.is-empty{display:flex;align-items:center;justify-content:center}
+.rq-em{padding:0;width:100%}
+.rq-em .ic{width:112px;height:112px;background:#f1f5fa}
+.rq-em .ic svg{width:40px;height:40px;stroke-width:1.6}
+.rq-em h3{font-size:22px;margin-top:28px}
+.rq-em p{font-size:14px;max-width:370px;margin-top:12px;line-height:1.45}
+.rq-chips{margin-top:26px;max-width:360px;gap:10px 9px}
+.rq-chip{height:36px;padding:0 18px;font-size:13px;font-weight:600}
+@media (max-width:420px){.rq-h2,.rq-sub,.rq-b,.rq-f,.rq-f2,.rq-h{padding-left:20px;padding-right:20px}.rq-tab{font-size:20px}}
+.rq-f2{padding:19px 30px 34px}
+.rq-f2 .rq-btn{height:52px}
+.rq-f2 .rq-note{margin-top:14px}
+@media (max-width:420px){.rq-f2{padding-bottom:24px}}
+.rq-tab{font-size:23px}
+.rq-ib.bare svg{width:20px;height:20px;stroke-width:2.2}
+@media (max-width:420px){.rq-tab{font-size:20px}}
+/* small caps labels use DM Sans like "REQUEST NO." in the Paper frame */
+.rq-li .lb,.rq-pl,.rq-sc .hd,.rq-done .rq-nx .h{font-family:"DM Sans",system-ui,sans-serif;font-weight:600;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted,#5b6472)}
