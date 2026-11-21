@@ -19,7 +19,17 @@
   var QUICK = [1, 5, 10, 20, 50];
   var KEY = 'oslopack-request';
   var items = [];
-  try { items = JSON.parse(localStorage.getItem(KEY) || '[]'); } catch (e) { items = []; }
+  try {
+    var raw = JSON.parse(localStorage.getItem(KEY) || '[]');
+    if (Array.isArray(raw)) items = raw.filter(function (x) {
+      return x && typeof x === 'object' && typeof x.id === 'string' && Object.prototype.hasOwnProperty.call(PRODUCTS, x.id) &&
+        typeof x.qty === 'number' && isFinite(x.qty) && x.qty >= 1;
+    }).map(function (x) {
+      var def = PRODUCTS[x.id].opts.map(function (g) { return g[2]; });
+      var sel = Array.isArray(x.sel) ? def.map(function (d, gi) { var v = x.sel[gi]; return (typeof v === 'number' && v >= 0 && v < PRODUCTS[x.id].opts[gi][1].length) ? v : d; }) : def;
+      return { id: x.id, qty: Math.min(999, Math.floor(x.qty)), sel: sel };
+    });
+  } catch (e) { items = []; }
 
   var ICON = {
     x: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>',
@@ -42,23 +52,62 @@
   };
 
   var scrim = document.createElement('div'); scrim.className = 'rq-scrim';
-  var box = document.createElement('aside'); box.className = 'rq'; box.setAttribute('role', 'dialog'); box.setAttribute('aria-modal', 'true'); box.setAttribute('aria-label', 'Request list');
-  document.body.appendChild(scrim); document.body.appendChild(box);
+  var box = document.createElement('aside'); box.className = 'rq'; box.setAttribute('role', 'dialog'); box.setAttribute('aria-modal', 'true'); box.setAttribute('aria-labelledby', 'rq-title');
+  var live = document.createElement('div'); live.className = 'rq-live'; live.setAttribute('role', 'status'); live.setAttribute('aria-live', 'polite'); live.setAttribute('aria-atomic', 'true');
+  document.body.appendChild(scrim); document.body.appendChild(box); document.body.appendChild(live);
+  // Announce count/total changes to screen readers (cleared first so identical text is re-read).
+  function announce(msg) { live.textContent = ''; setTimeout(function () { live.textContent = msg; }, 30); }
+  // Page behind the dialog is inert while open.
+  var inerted = [];
+  function setInert(on) {
+    if (on) {
+      inerted = [].filter.call(document.body.children, function (el) { return el !== box && el !== scrim && el !== live && el.tagName !== 'SCRIPT' && !el.inert; });
+      inerted.forEach(function (el) { el.inert = true; });
+    } else { inerted.forEach(function (el) { el.inert = false; }); inerted = []; }
+  }
+  // After a re-render keep focus on the same control (same data-act / index / option), else the first control.
+  function focusKey(trg) {
+    var a = trg || document.activeElement;   // Safari does not focus buttons on click, so prefer the clicked control
+    if (!a || a === box || !box.contains(a)) return null;
+    return { act: a.getAttribute('data-act'), i: a.getAttribute('data-i'), opt: a.getAttribute('data-opt'), q: a.getAttribute('data-q'), cls: a.className, tag: a.tagName };
+  }
+  function restoreFocus(k) {
+    var el = null, sel;
+    if (k) {
+      if (k.opt !== null) sel = '[data-opt="' + k.opt + '"]';
+      else if (k.q !== null) sel = '[data-q="' + k.q + '"]';
+      else if (k.act) sel = '[data-act="' + k.act + '"]' + (k.i !== null ? '[data-i="' + k.i + '"]' : '');
+      if (sel) el = box.querySelector(sel);
+      if (!el && k.act && k.i !== null) { var all = box.querySelectorAll('[data-act="' + k.act + '"]'); el = all.length ? all[Math.min(+k.i, all.length - 1)] : null; }
+    }
+    if (!el) el = box.querySelector('.rq-done h2') || [].filter.call(box.querySelectorAll(FOCUSABLE), function (n) { return n.offsetParent !== null; })[0];
+    if (el) el.focus({ preventScroll: true }); else box.focus({ preventScroll: true });
+  }
+  function rerender(view, trg) { var k = focusKey(trg); view(); restoreFocus(k); }
 
   var cur = null;       // product step draft {id, qty, sel[]}
   var lastRef = '';
 
-  var opener = null;
+  var opener = null, lockPad = '', padded = false;
   var FOCUSABLE = 'a[href],button:not([disabled]),input,select,textarea,[tabindex]:not([tabindex="-1"])';
   var isOpen = function () { return box.classList.contains('on'); };
-  function open() {
-    if (!isOpen()) opener = document.activeElement;
-    scrim.classList.add('on'); box.classList.add('on'); document.body.style.overflow = 'hidden';
+  function open(from) {
+    if (!isOpen()) opener = from || document.activeElement;
+    if (!isOpen()) {
+      var w = document.documentElement.clientWidth;
+      document.body.style.overflow = 'hidden';
+      var gap = document.documentElement.clientWidth - w;   // scrollbar width lost; compensate so the page does not shift
+      if (gap > 0) { lockPad = document.body.style.paddingRight; document.body.style.paddingRight = gap + 'px'; padded = true; }
+      setInert(true);
+    }
+    scrim.classList.add('on'); box.classList.add('on');
     if (!box.contains(document.activeElement)) { box.setAttribute('tabindex', '-1'); box.focus({ preventScroll: true }); }
   }
   function close() {
     var was = isOpen();
     scrim.classList.remove('on'); box.classList.remove('on'); document.body.style.overflow = '';
+    if (padded) { document.body.style.paddingRight = lockPad; padded = false; }
+    setInert(false);
     if (was && opener && opener.focus && document.contains(opener)) opener.focus();
     if (was) opener = null;
   }
@@ -77,7 +126,7 @@
 
   function header(title, back, count) {
     return '<div class="rq-h"><div class="t">' + (back ? '<button class="rq-ib" data-act="' + back + '" aria-label="Back">' + ICON.back + '</button>' : '') +
-      '<h2>' + title + '</h2></div>' + (count ? '<span class="cnt">' + count + '</span>' : '') +
+      (title ? '<h2 id="rq-title">' + title + '</h2>' : '') + '</div>' + (count ? '<span class="cnt">' + count + '</span>' : '') +
       (!back ? '<button class="rq-ib" data-act="close" aria-label="Close">' + ICON.x + '</button>' : '') + '</div>';
   }
 
@@ -97,11 +146,13 @@
       '<div class="rq-est"><span>' + (cur.qty * p.pcs).toLocaleString('en-US') + ' ' + p.unit + ' · indicative price</span><b>' + fmt(line) + '</b></div></div>' +
       '<div class="rq-f"><div class="rq-sum"><span>Your request after adding: <b style="font-size:14px">' + after + ' item' + (after > 1 ? 's' : '') + '</b></span><span>Est. <b>' + fmt(afterTotal) + '</b></span></div>' +
       '<button class="rq-btn" data-act="add">Add to request · ' + cur.qty + ' cartons</button><div class="rq-note">No payment now. Our team confirms price and delivery.</div></div>';
+    announce(cur.qty + ' carton' + (cur.qty > 1 ? 's' : '') + ', ' + (cur.qty * p.pcs).toLocaleString('en-US') + ' ' + p.unit + ', ' + fmt(line));
   }
 
   function viewReview() {
     if (!items.length) {
       box.innerHTML = header('Your request', null) + '<div class="rq-b"><div class="rq-empty"><p><b>Your request is empty.</b></p><p style="margin-top:6px">Add products and send one request for everything.</p></div></div><div class="rq-f"><button class="rq-btn" data-act="close">Browse products</button></div>';
+      announce('Your request is empty');
       return;
     }
     var list = items.map(function (i, idx) {
@@ -118,55 +169,57 @@
       '<div class="rq-fld"><label for="rq-area">Delivery area</label><select id="rq-area"><option>West Bay, Doha</option><option>The Pearl, Doha</option><option>Lusail</option><option>Al Wakrah</option><option>Al Khor</option><option>Other (tell us in the note)</option></select></div>' +
       '<div class="rq-fld"><label for="rq-note">Note for our team <span>(optional)</span></label><textarea id="rq-note" placeholder="Delivery date, custom printing, anything we should know"></textarea></div></div>' +
       '<div class="rq-f"><button class="rq-btn" data-act="send">Send request</button><div class="rq-note">No payment now. We reply on WhatsApp within 1 working day.</div></div>';
-    var s = (function () { try { return JSON.parse(localStorage.getItem(KEY + '-contact') || '{}'); } catch (e) { return {}; } })();
-    if (s.name) document.getElementById('rq-name').value = s.name;
-    if (s.phone) document.getElementById('rq-phone').value = s.phone;
+    announce(items.length + ' item' + (items.length > 1 ? 's' : '') + ', estimated total ' + fmt(total()));
+    var s = (function () { try { var c = JSON.parse(localStorage.getItem(KEY + '-contact') || '{}'); return c && typeof c === 'object' ? c : {}; } catch (e) { return {}; } })();
+    if (typeof s.name === 'string' && s.name) document.getElementById('rq-name').value = s.name;
+    if (typeof s.phone === 'string' && s.phone) document.getElementById('rq-phone').value = s.phone;
   }
 
   function viewSent(n, t) {
-    box.innerHTML = header('Request sent', null).replace('<h2>Request sent</h2>', '<h2></h2>') +
-      '<div class="rq-b rq-done"><div class="rq-ok">' + ICON.ok + '</div><h2>Request sent</h2><p class="sub">Thanks. Our team will review your items and reply on WhatsApp within 1 working day.</p><span class="rq-ref">' + lastRef + '</span>' +
+    box.innerHTML = header('', null) +
+      '<div class="rq-b rq-done"><div class="rq-ok">' + ICON.ok + '</div><h2 id="rq-title" tabindex="-1">Request sent</h2><p class="sub">Thanks. Our team will review your items and reply on WhatsApp within 1 working day.</p><span class="rq-ref">' + lastRef + '</span>' +
       '<div class="rq-est" style="margin-top:24px"><span>' + n + ' item' + (n > 1 ? 's' : '') + ' · estimated, to be confirmed</span><b>' + fmt(t) + '</b></div>' +
       '<div class="rq-nx"><div class="h">What happens next</div>' +
       '<div class="rq-s"><div class="n on">✓</div><div><b>Request received</b><span>Saved to your request history.</span></div></div>' +
       '<div class="rq-s"><div class="n">2</div><div><b>Our team confirms price and delivery</b><span>We check stock, delivery date and any custom printing.</span></div></div>' +
       '<div class="rq-s"><div class="n">3</div><div><b>You approve, then pay by bank transfer or LPO</b><span>Nothing is charged until you agree to the final quote.</span></div></div></div></div>' +
       '<div class="rq-f"><div class="rq-fb"><button class="rq-btn alt" data-act="close">Keep browsing</button><a class="rq-btn" href="' + ROOT + 'quotes-history.html">View my requests</a></div></div>';
+    announce('Request sent. Reference ' + lastRef);
   }
 
   box.addEventListener('click', function (e) {
     var t = e.target.closest('[data-act],[data-opt],[data-q]'); if (!t) return;
     var act = t.getAttribute('data-act'), i = +t.getAttribute('data-i');
-    if (t.hasAttribute('data-opt')) { var o = t.getAttribute('data-opt').split(':'); cur.sel[+o[0]] = +o[1]; return viewProduct(); }
-    if (t.hasAttribute('data-q')) { cur.qty = +t.getAttribute('data-q'); return viewProduct(); }
+    if (t.hasAttribute('data-opt')) { var o = t.getAttribute('data-opt').split(':'); cur.sel[+o[0]] = +o[1]; return rerender(viewProduct, t); }
+    if (t.hasAttribute('data-q')) { cur.qty = +t.getAttribute('data-q'); return rerender(viewProduct, t); }
     switch (act) {
       case 'close': return close();
-      case 'dec': cur.qty = Math.max(1, cur.qty - 1); return viewProduct();
-      case 'inc': cur.qty = Math.min(999, cur.qty + 1); return viewProduct();
+      case 'dec': cur.qty = Math.max(1, cur.qty - 1); return rerender(viewProduct, t);
+      case 'inc': cur.qty = Math.min(999, cur.qty + 1); return rerender(viewProduct, t);
       case 'add':
         var ex = items.filter(function (x) { return x.id === cur.id; })[0];
         if (ex) { ex.qty = cur.qty; ex.sel = cur.sel; } else items.push({ id: cur.id, qty: cur.qty, sel: cur.sel });
-        save(); return viewReview();
+        save(); return rerender(viewReview, t);
       case 'more': return close();
-      case 'idec': items[i].qty = Math.max(1, items[i].qty - 1); save(); return viewReview();
-      case 'iinc': items[i].qty = Math.min(999, items[i].qty + 1); save(); return viewReview();
-      case 'rm': items.splice(i, 1); save(); return viewReview();
+      case 'idec': items[i].qty = Math.max(1, items[i].qty - 1); save(); return rerender(viewReview, t);
+      case 'iinc': items[i].qty = Math.min(999, items[i].qty + 1); save(); return rerender(viewReview, t);
+      case 'rm': items.splice(i, 1); save(); return rerender(viewReview, t);
       case 'send':
         var name = document.getElementById('rq-name'), phone = document.getElementById('rq-phone'), ok = true;
         [['f-name', name], ['f-phone', phone]].forEach(function (p) { var bad = !p[1].value.trim(); document.getElementById(p[0]).classList.toggle('err', bad); if (bad) ok = false; });
         if (!ok) { (name.value.trim() ? phone : name).focus(); return; }
         try { localStorage.setItem(KEY + '-contact', JSON.stringify({ name: name.value, phone: phone.value })); } catch (e) {}
         lastRef = 'REQ-' + (20000 + Math.floor(Math.random() * 9999));
-        var n = items.length, t2 = total(); items = []; save(); return viewSent(n, t2);
+        var n = items.length, t2 = total(); items = []; save(); return rerender(function () { viewSent(n, t2); }, t);
     }
   });
 
   document.addEventListener('click', function (e) {
     var a = e.target.closest('[data-add]');
     if (a) { e.preventDefault(); e.stopPropagation(); var id = a.getAttribute('data-add'), ex = items.filter(function (x) { return x.id === id; })[0];
-      cur = { id: id, qty: ex ? ex.qty : 5, sel: ex ? ex.sel.slice() : PRODUCTS[id].opts.map(function (g) { return g[2]; }) }; viewProduct(); return open(); }
+      cur = { id: id, qty: ex ? ex.qty : 5, sel: ex ? ex.sel.slice() : PRODUCTS[id].opts.map(function (g) { return g[2]; }) }; viewProduct(); return open(a); }
     var r = e.target.closest('[data-open-request]');
-    if (r) { e.preventDefault(); e.stopPropagation(); viewReview(); open(); }
+    if (r) { e.preventDefault(); e.stopPropagation(); viewReview(); open(r); }
   }, true);
 
   counts();
