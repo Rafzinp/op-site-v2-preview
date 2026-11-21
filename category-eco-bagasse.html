@@ -48,7 +48,7 @@
 /* card add to cart: bag -> check, count updates through the request store */
 document.querySelectorAll('[data-quick-add]').forEach(function(b){var lb=b.querySelector('.lb'),t;
   b.addEventListener('click',function(e){e.preventDefault();e.stopPropagation();var api=window.opRequest;if(!api||!api.quickAdd)return;
-    api.quickAdd(b.getAttribute('data-quick-add'),{name:b.dataset.name,price:b.dataset.price,img:b.dataset.img,sizes:(b.dataset.sizes||'').split('|').filter(Boolean)});
+    api.quickAdd(b.getAttribute('data-quick-add'),{name:b.dataset.name,price:b.dataset.price,img:b.dataset.img,sizes:(b.dataset.sizes||'').split('|').filter(Boolean)},b);
     b.classList.add('added');lb.textContent='Added to cart';
     clearTimeout(t);t=setTimeout(function(){b.classList.remove('added');lb.textContent='Add to cart'},1800)})});
 </script>
