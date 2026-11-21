@@ -26,7 +26,7 @@
   var normDef = function (id, d) {
     if (!/^[a-z0-9-]{1,80}$/.test(id) || !d || typeof d !== 'object') return null;
     var price = Number(d.price), name = typeof d.name === 'string' ? d.name.slice(0, 120) : '', img = typeof d.img === 'string' ? d.img : '';
-    if (!name || !isFinite(price) || price <= 0 || price > 1e6 || !/^assets\/[\w\-./]+$/.test(img)) return null;
+    if (!name || !isFinite(price) || price < 0 || price > 1e6 || !/^assets\/[\w\-./]+$/.test(img)) return null;
     var sizes = Array.isArray(d.sizes) ? d.sizes.filter(function (z) { return typeof z === 'string' && z; }).slice(0, 8).map(function (z) { return z.slice(0, 30); }) : [];
     return { name: name, sub: '', per: 'carton', unit: 'pcs', pcs: 0, price: price, img: img, opts: sizes.length ? [['Size', sizes, 0]] : [], def: { name: name, price: price, img: img, sizes: sizes } };
   };
@@ -59,6 +59,11 @@
   var fmt = function (n) { return 'QAR ' + n.toLocaleString('en-US'); };
   var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
   var save = function () { try { localStorage.setItem(KEY, JSON.stringify(items)); } catch (e) {} counts(); };
+  // Items with no price ("price on request") are left out of the total and flagged instead.
+  var totalTxt = function () {
+    var unpriced = items.some(function (i) { return !PRODUCTS[i.id].price; }), t = items.reduce(function (s, i) { return s + PRODUCTS[i.id].price * i.qty; }, 0);
+    return t ? fmt(t) + (unpriced ? ' + items on request' : '') : (unpriced ? 'Price on request' : fmt(0));
+  };
   var total = function () { return items.reduce(function (s, i) { return s + PRODUCTS[i.id].price * i.qty; }, 0); };
   var counts = function () {
     var n = items.length;
@@ -159,14 +164,14 @@
     var after = items.filter(function (i) { return i.id !== cur.id; }).length + 1;
     var afterTotal = items.filter(function (i) { return i.id !== cur.id; }).reduce(function (s, i) { return s + PRODUCTS[i.id].price * i.qty; }, 0) + line;
     box.innerHTML = header('Add to request') +
-      '<div class="rq-b"><div class="rq-prow"><div class="im"><img src="' + ROOT + p.img + '" alt="' + esc(p.name) + '"></div><div><h3>' + p.name + '</h3><div class="m">' + p.sub + '</div><div class="pr">' + fmt(p.price) + ' <span>/ ' + p.per + '</span></div></div></div>' +
+      '<div class="rq-b"><div class="rq-prow"><div class="im"><img src="' + ROOT + p.img + '" alt="' + esc(p.name) + '"></div><div><h3>' + p.name + '</h3><div class="m">' + p.sub + '</div><div class="pr">' + (p.price ? fmt(p.price) + ' <span>/ ' + p.per + '</span>' : 'Price on request') + '</div></div></div>' +
       opts + '<div class="rq-lbl">Quantity <span>' + (p.pcs ? 'Cartons of ' + p.pcs.toLocaleString('en-US') : 'Priced per carton') + '</span></div>' +
       '<div class="rq-step"><button data-act="dec" aria-label="Fewer">−</button><div class="v">' + cur.qty + '<small>cartons</small></div><button data-act="inc" aria-label="More">+</button></div>' +
       '<div class="rq-qk">' + QUICK.map(function (q) { return '<button class="rq-o' + (cur.qty === q ? ' on' : '') + '" data-q="' + q + '">' + q + (q === 50 ? ' · free delivery' : '') + '</button>'; }).join('') + '</div>' +
-      '<div class="rq-est"><span>' + (p.pcs ? (cur.qty * p.pcs).toLocaleString('en-US') + ' ' + p.unit + ' · ' : '') + 'indicative price</span><b>' + fmt(line) + '</b></div></div>' +
-      '<div class="rq-f"><div class="rq-sum"><span>Your request after adding: <b style="font-size:14px">' + after + ' item' + (after > 1 ? 's' : '') + '</b></span><span>Est. <b>' + fmt(afterTotal) + '</b></span></div>' +
+      '<div class="rq-est"><span>' + (p.pcs ? (cur.qty * p.pcs).toLocaleString('en-US') + ' ' + p.unit + ' · ' : '') + 'indicative price</span><b>' + (p.price ? fmt(line) : 'On request') + '</b></div></div>' +
+      '<div class="rq-f"><div class="rq-sum"><span>Your request after adding: <b style="font-size:14px">' + after + ' item' + (after > 1 ? 's' : '') + '</b></span><span>Est. <b>' + (afterTotal ? fmt(afterTotal) : 'On request') + '</b></span></div>' +
       '<button class="rq-btn" data-act="add">Add to request · ' + cur.qty + ' cartons</button><div class="rq-note">No payment now. Our team confirms price and delivery.</div></div>';
-    announce(cur.qty + ' carton' + (cur.qty > 1 ? 's' : '') + ', ' + (p.pcs ? (cur.qty * p.pcs).toLocaleString('en-US') + ' ' + p.unit + ', ' : '') + fmt(line));
+    announce(cur.qty + ' carton' + (cur.qty > 1 ? 's' : '') + ', ' + (p.pcs ? (cur.qty * p.pcs).toLocaleString('en-US') + ' ' + p.unit + ', ' : '') + (p.price ? fmt(line) : 'price on request'));
   }
 
   function viewReview() {
@@ -179,17 +184,17 @@
       var p = PRODUCTS[i.id];
       return '<div class="rq-it"><div class="im"><img src="' + ROOT + p.img + '" alt=""></div><div><h4>' + p.name + '</h4><div class="m">' + (p.pcs ? (i.qty * p.pcs).toLocaleString('en-US') + ' ' + p.unit : i.qty + ' carton' + (i.qty > 1 ? 's' : '')) + '</div>' +
         '<div class="st"><button data-act="idec" data-i="' + idx + '" aria-label="Fewer">−</button><span>' + i.qty + '</span><button data-act="iinc" data-i="' + idx + '" aria-label="More">+</button></div></div>' +
-        '<div class="pr">' + fmt(p.price * i.qty) + '<button data-act="rm" data-i="' + idx + '">Remove</button></div></div>';
+        '<div class="pr">' + (p.price ? fmt(p.price * i.qty) : 'On request') + '<button data-act="rm" data-i="' + idx + '">Remove</button></div></div>';
     }).join('');
     box.innerHTML = header('Your request', null, items.length + ' item' + (items.length > 1 ? 's' : '')) +
       '<div class="rq-b"><div class="rq-sl"><span>Items</span><a data-act="more">+ Add more products</a></div>' + list +
-      '<div class="rq-tot"><span>Estimated total</span><b>' + fmt(total()) + '</b></div>' +
+      '<div class="rq-tot"><span>Estimated total</span><b>' + totalTxt() + '</b></div>' +
       '<div class="rq-two rq-fld"><div id="f-name"><label for="rq-name">Contact name</label><input id="rq-name" autocomplete="name"><div class="rq-err">Enter your name</div></div>' +
       '<div id="f-phone"><label for="rq-phone">WhatsApp / phone</label><input id="rq-phone" autocomplete="tel" inputmode="tel" placeholder="+974"><div class="rq-err">Enter a phone number</div></div></div>' +
       '<div class="rq-fld"><label for="rq-area">Delivery area</label><select id="rq-area"><option>West Bay, Doha</option><option>The Pearl, Doha</option><option>Lusail</option><option>Al Wakrah</option><option>Al Khor</option><option>Other (tell us in the note)</option></select></div>' +
       '<div class="rq-fld"><label for="rq-note">Note for our team <span>(optional)</span></label><textarea id="rq-note" placeholder="Delivery date, custom printing, anything we should know"></textarea></div></div>' +
       '<div class="rq-f"><button class="rq-btn" data-act="send">Send request</button><div class="rq-note">No payment now. We reply on WhatsApp within 1 working day.</div></div>';
-    announce(items.length + ' item' + (items.length > 1 ? 's' : '') + ', estimated total ' + fmt(total()));
+    announce(items.length + ' item' + (items.length > 1 ? 's' : '') + ', estimated total ' + totalTxt());
     var s = (function () { try { var c = JSON.parse(localStorage.getItem(KEY + '-contact') || '{}'); return c && typeof c === 'object' ? c : {}; } catch (e) { return {}; } })();
     if (typeof s.name === 'string' && s.name) document.getElementById('rq-name').value = s.name;
     if (typeof s.phone === 'string' && s.phone) document.getElementById('rq-phone').value = s.phone;
@@ -198,7 +203,7 @@
   function viewSent(n, t) {
     box.innerHTML = header('', null) +
       '<div class="rq-b rq-done"><div class="rq-ok">' + ICON.ok + '</div><h2 id="rq-title" tabindex="-1">Request sent</h2><p class="sub">Thanks. Our team will review your items and reply on WhatsApp within 1 working day.</p><span class="rq-ref">' + lastRef + '</span>' +
-      '<div class="rq-est" style="margin-top:24px"><span>' + n + ' item' + (n > 1 ? 's' : '') + ' · estimated, to be confirmed</span><b>' + fmt(t) + '</b></div>' +
+      '<div class="rq-est" style="margin-top:24px"><span>' + n + ' item' + (n > 1 ? 's' : '') + ' · estimated, to be confirmed</span><b>' + t + '</b></div>' +
       '<div class="rq-nx"><div class="h">What happens next</div>' +
       '<div class="rq-s"><div class="n on">✓</div><div><b>Request received</b><span>Saved to your request history.</span></div></div>' +
       '<div class="rq-s"><div class="n">2</div><div><b>Our team confirms price and delivery</b><span>We check stock, delivery date and any custom printing.</span></div></div>' +
@@ -230,7 +235,7 @@
         if (!ok) { (name.value.trim() ? phone : name).focus(); return; }
         try { localStorage.setItem(KEY + '-contact', JSON.stringify({ name: name.value, phone: phone.value })); } catch (e) {}
         lastRef = 'REQ-' + (20000 + Math.floor(Math.random() * 9999));
-        var n = items.length, t2 = total(); items = []; save(); return rerender(function () { viewSent(n, t2); }, t);
+        var n = items.length, t2 = totalTxt(); items = []; save(); return rerender(function () { viewSent(n, t2); }, t);
     }
   });
 
