@@ -11,6 +11,9 @@
                opts: [['Size', ['4 oz', '8 oz', '12 oz', '16 oz'], 1], ['Lid', ['No lid', 'White PP lid', 'Fibre lid'], 1]] },
     box:     { name: 'Kraft takeaway box', sub: 'Kraft board · grease-resistant', per: 'carton of 300', unit: 'pcs', pcs: 300, price: 210, img: 'assets/img/box.jpg',
                opts: [['Style', ['With window', 'Plain'], 0]] },
+    // Placeholder carton size (copied from the takeaway box) - confirm with the product team.
+    deli:    { name: 'Kraft deli box (KDB)', sub: 'Kraft board · grease-resistant', per: 'carton of 300', unit: 'pcs', pcs: 300, price: 96, img: 'assets/img/doop/_bXvhZgME-.webp',
+               opts: [['Size', ['Small', 'Medium'], 0]] },
     bag:     { name: 'Kraft paper bag, medium', sub: 'Recycled kraft · twisted handle', per: 'carton of 250', unit: 'pcs', pcs: 250, price: 96, img: 'assets/img/bag.jpg',
                opts: [['Print', ['Plain', 'Custom logo (from 500 pcs)'], 0]] },
     bagasse: { name: 'Bagasse container 750 ml', sub: 'Sugarcane fibre · home compostable', per: 'carton of 500', unit: 'pcs', pcs: 500, price: 260, img: 'assets/img/bagasse.jpg', tag: 'Compostable',
@@ -221,6 +224,19 @@
     var r = e.target.closest('[data-open-request]');
     if (r) { e.preventDefault(); e.stopPropagation(); viewReview(); open(r); }
   }, true);
+
+  // Direct add without opening the drawer: used by the home page product cards.
+  // Adds one carton with default options (or one more carton if already added). Returns the line count.
+  window.opRequest = window.opRequest || {};
+  window.opRequest.quickAdd = function (id) {
+    var p = PRODUCTS[id]; if (!p) return items.length;
+    var ex = items.filter(function (x) { return x.id === id; })[0];
+    if (ex) ex.qty = Math.min(999, ex.qty + 1);
+    else items.push({ id: id, qty: 1, sel: p.opts.map(function (g) { return g[2]; }) });
+    save();
+    announce('Added to cart: ' + p.name + '. ' + items.length + (items.length === 1 ? ' item' : ' items') + ' in cart.');
+    return items.length;
+  };
 
   counts();
 })();
