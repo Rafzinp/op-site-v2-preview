@@ -1,0 +1,8 @@
+/* Smooth accordions (height + fade + margin animate together) and gentle anchor scrolling */
+.acc>p{display:block!important;overflow:hidden;max-height:0;opacity:0;margin-top:0!important;transition:max-height .55s cubic-bezier(.22,1,.36,1),opacity .4s ease,margin-top .55s cubic-bezier(.22,1,.36,1)}
+.acc.open>p{opacity:1;margin-top:12px!important;max-height:1000px}
+.noacc .acc>p{transition:none!important}
+.acc>:first-child{cursor:pointer;-webkit-tap-highlight-color:transparent}
+.acc>:first-child:focus-visible{outline:2px solid #254a8c;outline-offset:4px;border-radius:6px}
+html{scroll-behavior:smooth}
+@media(prefers-reduced-motion:reduce){.acc>p{transition:none}html{scroll-behavior:auto}}

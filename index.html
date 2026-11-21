@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>oslopack | Packaging that performs, priced by the carton</title>
+<meta name="description" content="Cups, boxes and bags for cafés, caterers and kitchens across Qatar. Wholesale prices, delivered in 48 hours across Doha.">
+<link rel="icon" href="assets/img/oslopack-logo.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/drawer.css">
+<style>
+*{margin:0;box-sizing:border-box}
+:root{--blue:#254a8c;--navy:#101b3c;--ink:#14181f;--muted:#5b6472;--line:#e4e8ee;--band:#eef4fa}
+html{scroll-behavior:smooth}
+body{font-family:"DM Sans",system-ui,sans-serif;color:var(--ink);background:#fff;line-height:1.6;font-size:16px;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+a{color:inherit;text-decoration:none}
+img{display:block;max-width:100%}
+.mono{font-family:"DM Mono",monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.btn{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 22px;border-radius:999px;font:600 14px "DM Sans",sans-serif;border:1px solid var(--ink);background:none;cursor:pointer;color:var(--ink)}
+.btn.dark{background:var(--navy);color:#fff;border-color:var(--navy)}.btn.w{background:#fff;color:var(--blue);border-color:#fff}
+.pad{padding:0 82px;max-width:1440px;margin:0 auto}
+.sec{margin-top:56px}
+h2.l{font-size:26px;font-weight:400;letter-spacing:-.015em;line-height:1.2}
+.row{display:flex;justify-content:space-between;align-items:center;gap:16px}
+.top{background:var(--band);display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:6px 82px;font-size:14px;color:var(--muted);gap:16px}
+.top a{display:inline-flex;align-items:center;min-height:44px}.top a.s{color:var(--blue);font-weight:600}.top .r{text-align:right}.top .r a:hover{color:var(--ink)}
+header .in{position:relative;display:flex;align-items:center;justify-content:space-between;height:84px}
+header nav{display:flex;gap:30px;font-size:14px}header nav a{display:inline-flex;align-items:center;min-height:44px}header nav a:hover{color:var(--blue)}
+.ib{width:44px;height:44px;border:1px solid var(--ink);border-radius:10px;display:grid;place-items:center;position:relative;background:none;cursor:pointer;color:var(--ink)}
+.ib i{position:absolute;top:-7px;right:-7px;min-width:20px;height:20px;padding:0 4px;border-radius:10px;background:var(--blue);color:#fff;font:600 12px "DM Sans";display:grid;place-items:center;font-style:normal}
+.hero{position:relative;min-height:400px;padding:36px 56px;display:flex;flex-direction:column;border-radius:26px;overflow:hidden;background:#1f3f7a;color:#fff}
+.hero>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 85%}
+.hero:before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(28,58,116,.5),rgba(28,58,116,.72));z-index:1}
+.hero>*:not(img){position:relative;z-index:2}
+.hero .mono{color:rgba(255,255,255,.7)}
+.hero h1{margin-top:30px;font-size:44px;font-weight:400;letter-spacing:-.02em;line-height:1.12;max-width:640px}
+.hero p{margin-top:14px;font-size:15px;color:rgba(255,255,255,.88)}
+.chips{margin-top:auto;padding-top:32px;display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.chips a{height:46px;border-radius:12px;border:1px solid rgba(255,255,255,.3);background:rgba(255,255,255,.1);font-size:14px;display:flex;justify-content:space-between;align-items:center;padding:0 20px;transition:background .15s}
+.chips a:hover{background:rgba(255,255,255,.2)}
+.trust{display:flex;align-items:center;height:96px;border:1px solid rgba(20,24,31,.12);border-radius:16px;padding:0 24px;overflow:hidden;margin-top:24px}
+.trust>span{flex:none;width:210px;font-size:14px}
+.trust>div{flex:1;display:flex;overflow:hidden}.lg{flex:1 0 120px;display:grid;place-items:center}
+.wg{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:20px}
+.wc{border:1px solid var(--line);border-radius:16px;padding:24px;display:flex;flex-direction:column;transition:border-color .15s,transform .15s}
+.wc:hover{border-color:var(--blue);transform:translateY(-2px)}
+.wc .ic{width:40px;height:40px;border-radius:50%;background:var(--band);display:grid;place-items:center}
+.wc h3{font-size:18px;font-weight:500;margin-top:20px;letter-spacing:-.01em}.wc p{font-size:14px;color:var(--muted);margin-top:6px}
+.about{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start}
+.about .v{display:grid;grid-template-columns:1fr 1fr;gap:32px}
+.about .v>div{border-top:1px solid var(--ink);padding-top:14px}.about .v p{font-size:14px;color:var(--muted);margin-top:12px;line-height:1.55}
+.bg{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:20px}
+.bl{height:76px;border:1px solid var(--line);border-radius:12px;display:grid;place-items:center;padding:0 24px}
+.cg{display:grid;grid-template-columns:repeat(8,1fr);gap:20px 14px;margin-top:20px}
+.ct{position:relative;aspect-ratio:1/1;background:#F6F3EC;border-radius:12px;overflow:hidden}
+.ct img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;padding:14%}.ct img.mb{mix-blend-mode:multiply}
+.cg a:hover .ct{outline:1px solid var(--blue)}@media(hover:hover){.cg .ct img,.np .ct img,.bx .ct img{transition:transform 1s var(--ease);will-change:transform}.cg a:hover .ct img,.np a:hover .ct img,.bx:hover .ct img{transform:scale(1.1)}}.cg span{display:block;font-size:14px;font-weight:500;margin-top:8px;line-height:1.3}
+.ng{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-top:20px}
+.np .ct img{padding:12%}.np .tg{display:flex;gap:6px;margin:12px 0 8px}.np .tg i{font-style:normal;font-size:12px;padding:3px 10px;border-radius:999px;background:var(--band);color:var(--muted)}
+.np h4{font-size:14px;font-weight:600}.np p{font-size:14px;color:var(--muted);margin-top:3px}.np p b{color:var(--ink)}
+.b2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.bx{border-radius:22px;padding:32px;min-height:220px;display:grid;grid-template-columns:1fr 150px;gap:20px}
+.bx.a{background:var(--blue);color:#fff}.bx.b{background:var(--band)}
+.bx h3{font-size:22px;font-weight:400;letter-spacing:-.02em;line-height:1.15}
+.bx p{font-size:14px;margin-top:10px;max-width:260px;opacity:.85}
+.bx>div:first-child{display:flex;flex-direction:column;justify-content:space-between;align-items:flex-start;gap:20px}
+.bx .ct{align-self:center}
+.cert{display:flex;align-items:center;justify-content:space-between;gap:24px;border-top:1px solid var(--line);padding-top:24px}
+.cert .c{display:flex;gap:12px}
+.cc{display:flex;align-items:center;gap:14px;border:1px solid var(--line);border-radius:12px;padding:12px 20px;width:300px}
+.cc img{height:36px;width:auto}.cc b{display:block;font-size:14px;font-weight:500}.cc span{font-size:14px;color:var(--muted)}
+.sol{display:grid;grid-template-columns:1fr 1fr;gap:40px}
+.pills{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.pills a{border:1px solid var(--line);border-radius:999px;padding:10px 18px;font-size:14px;font-weight:500}.pills a:hover{border-color:var(--blue);color:var(--blue)}
+.faq{display:grid;grid-template-columns:1fr 1.3fr;gap:60px}
+.faq .acc{border-bottom:1px solid var(--line);padding:22px 0}.faq .ls{border-top:1px solid var(--ink)}
+.faq .ah{font-size:14px;font-weight:500;display:flex;justify-content:space-between;gap:16px;padding:0!important;color:var(--ink)}
+.faq .ah::after{content:"+";flex:none}.faq .acc.open .ah::after{content:"\2212"}
+.faq p{font-size:14px;color:var(--muted);margin-top:12px;line-height:1.55;max-width:560px}
+footer{background:var(--navy);color:#fff;margin-top:64px;padding:44px 0 0;overflow:hidden;border-radius:28px 28px 0 0}
+footer .pad{padding-bottom:0}
+footer h2{font-size:30px;font-weight:400;letter-spacing:-.02em}
+.fh{display:flex;justify-content:space-between;align-items:center;padding-bottom:32px;border-bottom:1px solid rgba(255,255,255,.14);gap:16px}
+.fg{display:grid;grid-template-columns:1.6fr repeat(4,1fr);gap:24px;padding-top:32px}
+.fg ul{padding:0}.fg li{list-style:none;font-size:14px;color:rgba(255,255,255,.86);margin-bottom:0}.fg li a{display:flex;align-items:center;min-height:44px}.fg li a:hover{color:#fff;text-decoration:underline}
+.fg h5{font:400 12px "DM Mono",monospace;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.72);margin-bottom:14px}
+.fg h3{font-size:21px;font-weight:500;line-height:1.2;margin:16px 0 28px;max-width:320px;letter-spacing:-.02em}
+.nl{height:46px;border:1px solid rgba(255,255,255,.28);border-radius:999px;padding:0 6px 0 20px;font-size:14px;color:rgba(255,255,255,.78);display:flex;justify-content:space-between;align-items:center;max-width:320px}
+.nl b{width:34px;height:34px;border-radius:50%;background:#fff;color:var(--navy);display:grid;place-items:center}
+.fb{display:flex;justify-content:space-between;border-top:1px solid rgba(255,255,255,.14);margin-top:24px;padding:8px 0 16px;font-size:14px;color:rgba(255,255,255,.78);gap:16px;flex-wrap:wrap}
+.fb div{display:flex;gap:0 22px;flex-wrap:wrap}.fb a{display:inline-flex;align-items:center;min-height:44px}.fb a:hover{color:#fff}
+.wm{font-size:260px;font-weight:500;letter-spacing:-.065em;line-height:.6;color:#1b2b5e;white-space:nowrap;margin:16px 0 0 -8px;-webkit-user-select:none;user-select:none;overflow:hidden}
+.wa{position:fixed;right:24px;bottom:24px;width:48px;height:48px;border-radius:50%;background:#4cc561;display:grid;place-items:center;box-shadow:0 4px 14px rgba(0,0,0,.18);z-index:30}
+@media(max-width:1000px){.pad,.top{padding-left:24px;padding-right:24px}.top{grid-template-columns:1fr}.top .r{text-align:left}header nav{display:none}.hero{padding:28px 24px}.hero h1{font-size:32px}.chips,.wg,.about,.b2,.sol,.faq{grid-template-columns:1fr}.bg,.ng{grid-template-columns:repeat(2,1fr)}.cg{grid-template-columns:repeat(4,1fr)}.bx{grid-template-columns:1fr}.bx .ct{display:none}.cert{flex-direction:column;align-items:flex-start}.cc{width:100%}.fg{grid-template-columns:1fr 1fr}.fh{flex-direction:column;align-items:flex-start}.wm{font-size:120px}.trust>span{display:none}}
+@media(max-width:560px){header .in{gap:10px}header .in>.row{gap:8px!important}header .in>a img{width:112px;height:auto}.fg{grid-template-columns:1fr}.fb{padding-right:64px}.wa{right:16px;bottom:16px}.cg{grid-template-columns:repeat(3,1fr)}.about .v,.cert .c{grid-template-columns:1fr;flex-direction:column;width:100%}.wm{font-size:80px}}
+
+/* mobile menu + focus */
+.mb{display:none;width:44px;height:44px;border:1px solid var(--ink);border-radius:10px;place-items:center;background:none;cursor:pointer;color:var(--ink);padding:0}
+@media(max-width:1000px){.mb{display:grid}
+header.open nav{display:flex;flex-direction:column;gap:0;position:absolute;top:100%;left:0;right:0;z-index:60;background:#fff;padding:8px 24px 16px;border-bottom:1px solid var(--line);box-shadow:0 14px 28px rgba(16,27,60,.1)}
+header.open nav a{min-height:48px;border-bottom:1px solid var(--line);font-size:16px}header.open nav a:last-child{border-bottom:0}}
+:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+footer :focus-visible{outline-color:#fff}
+.wa:focus-visible{outline-color:var(--navy)}
+
+/* ===== motion (CSS + ~1KB JS, transform/opacity only) ===== */
+:root{--ease:cubic-bezier(.22,1,.36,1)}
+/* 1. hero load reveal */
+.hero h1 .w{display:inline-block;overflow:hidden;vertical-align:top;padding-bottom:.08em}
+.hero h1 .w>span{display:inline-block;transform:translateY(112%);animation:up .9s var(--ease) forwards;animation-delay:calc(.15s + var(--i)*.07s)}
+.hero .mono,.hero p,.hero .chips a{opacity:0;transform:translateY(14px);animation:fade .8s var(--ease) forwards}
+.hero .mono{animation-delay:.05s}.hero p{animation-delay:.7s}
+.hero .chips a{animation-delay:calc(.85s + var(--i)*.09s)}
+.hero>img{animation:zoom 1.6s var(--ease) both}
+@keyframes up{to{transform:none}}@keyframes fade{to{opacity:1;transform:none}}@keyframes zoom{from{transform:scale(1.08)}to{transform:none}}
+/* characters: product cut-outs that float and follow the pointer */
+.hero>.chars{position:absolute;right:56px;top:28px;width:min(44%,520px);height:300px;z-index:2;pointer-events:none}
+.ch{position:absolute;animation:fl var(--t) ease-in-out infinite alternate;animation-delay:var(--d);opacity:0;animation-name:pop,fl;animation-duration:.9s,var(--t);animation-timing-function:var(--ease),ease-in-out;animation-iteration-count:1,6;animation-direction:normal,alternate;animation-fill-mode:forwards,none;animation-delay:calc(.5s + var(--o)),calc(1.4s + var(--o))}
+.ch img{display:block;width:100%;height:auto;transform:translate3d(calc(var(--mx,0)*var(--z)*1px),calc(var(--my,0)*var(--z)*1px),0) rotate(calc(var(--mx,0)*var(--r)*1deg));transition:transform .5s var(--ease)}
+.ch:before{content:"";position:absolute;left:14%;right:14%;bottom:-4px;height:14px;border-radius:50%;background:radial-gradient(closest-side,rgba(10,20,50,.4),transparent)}
+.c1{left:2%;top:96px;width:36%;--t:5.2s;--o:0s;--z:26;--r:3}.c2{left:34%;top:6px;width:38%;--t:6.4s;--o:.12s;--z:-18;--r:-4}.c3{right:0;top:120px;width:32%;--t:4.8s;--o:.24s;--z:34;--r:5}
+@keyframes pop{from{opacity:0;transform:translateY(40px) scale(.85) rotate(-6deg)}to{opacity:1;transform:none}}
+@keyframes fl{from{transform:translateY(-7px) rotate(-1.5deg)}to{transform:translateY(8px) rotate(1.5deg)}}
+/* 2. scroll reveals */
+.rv{opacity:0;transform:translateY(26px);transition:opacity .8s var(--ease),transform .8s var(--ease);transition-delay:calc(var(--i,0)*.07s)}
+.rv.in{opacity:1;transform:none}
+/* 3. hover text-swap */
+.ts{display:inline-block;position:relative;overflow:hidden;vertical-align:top;line-height:1.25}
+.ts>span{display:block;transition:transform .45s var(--ease)}
+.ts:after{content:attr(data-t);position:absolute;left:0;top:100%;white-space:nowrap;transition:transform .45s var(--ease)}
+a:hover>.ts>span,button:hover>.ts>span,.btn:hover .ts>span,a:focus-visible .ts>span{transform:translateY(-100%)}
+a:hover>.ts:after,button:hover>.ts:after,.btn:hover .ts:after,a:focus-visible .ts:after{transform:translateY(-100%)}
+/* 4. marquee */
+.mq{margin-top:28px;overflow:hidden;border-top:1px solid var(--line);border-bottom:1px solid var(--line);-webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
+.mq-t{display:flex;width:max-content;animation:mq 38s linear infinite}.mq:hover .mq-t{animation-play-state:paused}
+.mq-t span{display:flex;align-items:center;gap:28px;padding:20px 14px;font-size:30px;font-weight:300;letter-spacing:-.02em;white-space:nowrap}
+.mq-t i{width:10px;height:10px;border-radius:50%;background:var(--blue);display:inline-block;flex:none}
+@keyframes mq{to{transform:translateX(-50%)}}
+.hero.off .ch,.mq.off .mq-t,.bg *{animation-play-state:paused!important}
+@media(max-width:1000px){.hero>.chars{display:none}.mq-t span{font-size:22px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}.hero h1 .w>span,.hero .mono,.hero p,.hero .chips a,.ch,.rv{opacity:1!important;transform:none!important}}
+/* ===== spacing rhythm ===== */
+:root{--sp:clamp(56px,8vw,96px)}
+.sec,.pad.sec.about{margin-top:var(--sp)!important}
+.trust{margin-top:32px}
+.mq{margin-top:clamp(32px,4vw,48px)}
+.wg,.bg,.cg{margin-top:32px}.ng{margin-top:32px;gap:24px}
+.b2{gap:24px}
+footer{margin-top:clamp(72px,10vw,120px)}
+</style><link rel="stylesheet" href="assets/css/accordion.css">
+</head><body>
+<div class="top"><span>Free delivery over 50 cartons · Pay by bank transfer or LPO</span><a class="s" href="request-for-quote.html">Spring deals: up to 40% off selected cartons →</a><span class="r"><a href="industries.html">Industries</a> · <a href="request-for-quote.html">Bulk deals</a> · <a href="blog.html">Blog</a> · +974 7018 8064</span></div>
+<header><div class="pad in"><a href="index.html"><img alt="oslopack" src="assets/img/doop/SdZEj6Yc5k.svg" width="137" height="34"></a>
+<nav id="yk-nav"><a href="products.html">Shop</a><a href="industries.html">Industries</a><a href="request-for-quote.html">Custom printing</a><a href="about.html">Company</a><a href="blog.html">Resources</a><a href="contact.html">Contact us</a></nav>
+<div class="row" style="gap:10px"><a class="ib" href="search.html" aria-label="Search"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></a><a class="ib" href="wishlist.html" aria-label="Wishlist"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 10c0 5.600-7 10-7 10z"/></svg></a><button class="ib" data-open-request aria-label="Request list"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.2"/><circle cx="18" cy="20" r="1.2"/><path d="M2 3h3l2.7 12.4a1.5 1.5 0 0 0 1.5 1.1h8.6a1.5 1.5 0 0 0 1.5-1.1L21 7H6"/></svg><i data-request-count>0</i></button><button class="mb" type="button" aria-label="Menu" aria-expanded="false" aria-controls="yk-nav"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button></div></div></header>
+<div class="pad"><section class="hero"><img alt="Kraft cups, bag and boxes" src="assets/img/doop/nqvEINW3Aa.jpg" fetchpriority="high" decoding="async"><div class="chars" aria-hidden="true"><div class="ch c1"><img loading="lazy" decoding="async" src="assets/img/doop/s42i_1wWn0.webp" alt="" width="200" height="200"></div><div class="ch c2"><img loading="lazy" decoding="async" src="assets/img/doop/YwEEE2h7Sj.webp" alt="" width="200" height="200"></div><div class="ch c3"><img loading="lazy" decoding="async" src="assets/img/doop/At8aE0gtmS.webp" alt="" width="200" height="200"></div></div><span class="mono">Since 2011 · Doha, Qatar</span>
+<h1 aria-label="Packaging that performs. Priced by the carton."><span class="w"><span style="--i:0">Packaging</span></span> <span class="w"><span style="--i:1">that</span></span> <span class="w"><span style="--i:2">performs.</span></span> <span class="w"><span style="--i:3">Priced</span></span> <span class="w"><span style="--i:4">by</span></span> <span class="w"><span style="--i:5">the</span></span> <span class="w"><span style="--i:6">carton.</span></span></h1><p>Cups, boxes and bags for kitchens across Qatar.</p>
+<div class="chips"><a style="--i:0" href="industries/cafes.html"><span>Cafés &amp; Coffee</span><span>→</span></a><a style="--i:1" href="industries/restaurants.html"><span>Takeaway &amp; Restaurants</span><span>→</span></a><a style="--i:2" href="industries/hotels.html"><span>Hotels &amp; Caterers</span><span>→</span></a></div></section>
+<div class="trust"><span>Trusted by kitchens across Qatar</span><div><div class="lg"><img loading="lazy" decoding="async" alt="Starbucks" src="https://api.iconify.design/simple-icons/starbucks.svg?color=%2314181f&amp;height=30" style="height:30px"></div><div class="lg"><img loading="lazy" decoding="async" alt="McDonald's" src="https://api.iconify.design/simple-icons/mcdonalds.svg?color=%2314181f&amp;height=28" style="height:28px"></div><div class="lg"><img loading="lazy" decoding="async" alt="KFC" src="https://api.iconify.design/simple-icons/kfc.svg?color=%2314181f&amp;height=40" style="height:40px"></div><div class="lg"><img loading="lazy" decoding="async" alt="Burger King" src="https://api.iconify.design/simple-icons/burgerking.svg?color=%2314181f&amp;height=30" style="height:30px"></div><div class="lg"><img loading="lazy" decoding="async" alt="Hilton" src="https://api.iconify.design/simple-icons/hilton.svg?color=%2314181f&amp;height=34" style="height:34px"></div><div class="lg"><img loading="lazy" decoding="async" alt="Marriott" src="https://api.iconify.design/simple-icons/marriott.svg?color=%2314181f&amp;height=38" style="height:38px"></div><div class="lg"><img loading="lazy" decoding="async" alt="Qatar Airways" src="https://api.iconify.design/simple-icons/qatarairways.svg?color=%2314181f&amp;height=30" style="height:30px"></div><div class="lg"><img loading="lazy" decoding="async" alt="Taco Bell" src="https://api.iconify.design/simple-icons/tacobell.svg?color=%2314181f&amp;height=30" style="height:30px"></div></div></div></div>
+<div class="mq" aria-hidden="true"><div class="mq-t"><span>Quality<i></i>Reliability<i></i>Custom packaging<i></i>Eco bagasse<i></i>Delivered in 48 hours<i></i>ISO certified<i></i>Pay by LPO<i></i></span><span>Quality<i></i>Reliability<i></i>Custom packaging<i></i>Eco bagasse<i></i>Delivered in 48 hours<i></i>ISO certified<i></i>Pay by LPO<i></i></span></div></div>
+<main>
+<section class="pad sec"><span class="mono">Who we supply</span><h2 class="l" style="margin-top:12px">Packaging for every kitchen in Qatar</h2><div class="wg"><a href="industries/cafes.html" class="wc"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#254a8c" stroke-width="1.8"><path d="M5 8h12v6a5 5 0 0 1-5 5h-2a5 5 0 0 1-5-5V8zM17 10h2a2 2 0 0 1 0 4h-2"/></svg></span><h3>Cafés &amp; Coffee</h3><p>Cups, lids, sleeves and stirrers.</p></a><a href="industries/restaurants.html" class="wc"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#254a8c" stroke-width="1.8"><path d="M4 8l8-4 8 4v9l-8 4-8-4zM4 8l8 4 8-4M12 12v9"/></svg></span><h3>Takeaway &amp; Restaurants</h3><p>Boxes, containers and bags.</p></a><a href="industries/hotels.html" class="wc"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#254a8c" stroke-width="1.8"><path d="M5 21V4h9v17M14 9h5v12M9 8h1M9 12h1M9 16h1M3 21h18"/></svg></span><h3>Hotels &amp; Caterers</h3><p>Napkins, cutlery and trays in bulk.</p></a></div></section>
+<section class="pad sec about" style="margin-top:64px"><div><h2 class="l">Committed to quality, always improving</h2><a class="btn" href="about.html" style="margin-top:24px">About us →</a></div><div class="v"><div><span class="mono" style="color:var(--ink)">Our vision</span><p>To be a key player in complete disposable food packaging solutions for food service and household consumers.</p></div><div><span class="mono" style="color:var(--ink)">Our principles</span><p>Built on quality, reliability and value: best-in-class products, stock that is always available and competitive prices.</p></div></div></section>
+<section class="pad sec" id="brands"><h2 class="l">Shop by brand</h2><div class="bg"><div class="bl"><img loading="lazy" decoding="async" alt="oslopack" src="assets/img/doop/6RqJn4_sEC.svg" style="height:30px"></div><div class="bl"><img loading="lazy" decoding="async" alt="safepack" src="assets/img/doop/8s6YI1_F_l.svg" style="height:26px"></div><div class="bl"><img loading="lazy" decoding="async" alt="oslo fresh" src="assets/img/doop/MxIE1RpbLZ.svg" style="height:32px"></div><div class="bl"><img loading="lazy" decoding="async" alt="oslo soft" src="assets/img/doop/s7Pjepv1dB.svg" style="height:40px"></div></div></section>
+<section class="pad sec" id="categories"><div class="row"><h2 class="l">Shop by category</h2><a class="btn dark" href="products.html">All products →</a></div><div class="cg"><a href="products.html"><div class="ct"><img loading="lazy" decoding="async" alt="Eco bagasse" src="assets/img/doop/At8aE0gtmS.webp"></div><span>Eco bagasse</span></a><a href="products.html"><div class="ct"><img loading="lazy" decoding="async" alt="Kraft products" src="assets/img/doop/YwEEE2h7Sj.webp"></div><span>Kraft products</span></a><a href="products.html"><div class="ct"><img loading="lazy" decoding="async" alt="Wrap products" src="assets/img/doop/9ziah-ANH2.webp" class=mb></div><span>Wrap products</span></a><a href="products.html"><div class="ct"><img loading="lazy" decoding="async" alt="Paper packaging" src="assets/img/doop/hT7ZT9JHAJ.webp"></div><span>Paper packaging</span></a><a href="products.html"><div class="ct"><img loading="lazy" decoding="async" alt="Napkins, tissues &amp; maxi rolls" src="assets/img/doop/dhOia4ZCIh.webp" class=mb></div><span>Napkins, tissues &amp; maxi rolls</span></a><a href="products.html"><div class="ct"><img loading="lazy" decoding="async" alt="Black microwavable" src="assets/img/doop/seDp_nG-nJ.webp"></div><span>Black microwavable</span></a><a href="products.html"><div class="ct"><img loading="lazy" decoding="async" alt="Plastic products" src="assets/img/doop/iMhdKCG9rI.webp"></div><span>Plastic products</span></a><a href="products.html"><div class="ct"><img loading="lazy" decoding="async" alt="Bags, films &amp; rolls" src="assets/img/doop/FImQF5MAJf.webp" class=mb></div><span>Bags, films &amp; rolls</span></a><a href="products.html"><div class="ct"><img loading="lazy" decoding="async" alt="Wooden cutlery &amp; skewers" src="assets/img/doop/zwKm_kOuEk.webp"></div><span>Wooden cutlery &amp; skewers</span></a><a href="products.html"><div class="ct"><img loading="lazy" decoding="async" alt="Aluminium containers" src="assets/img/doop/pIhBJ82MzF.webp"></div><span>Aluminium containers</span></a><a href="products.html"><div class="ct"><img loading="lazy" decoding="async" alt="Gloves" src="assets/img/doop/ts1kmgK9N7.webp" class=mb></div><span>Gloves</span></a><a href="products.html"><div class="ct"><img loading="lazy" decoding="async" alt="Hygiene products" src="assets/img/doop/waY6huVdBa.webp"></div><span>Hygiene products</span></a><a href="products.html"><div class="ct"><img loading="lazy" decoding="async" alt="Cleaning materials" src="assets/img/doop/hrtAYQugl2.webp"></div><span>Cleaning materials</span></a><a href="products.html"><div class="ct"><img loading="lazy" decoding="async" alt="Dispensers" src="assets/img/doop/wHLI4-Z3JZ.webp" class=mb></div><span>Dispensers</span></a><a href="products.html"><div class="ct"><img loading="lazy" decoding="async" alt="Clear juice cups" src="assets/img/doop/pJB0TcKkjx.webp" class=mb></div><span>Clear juice cups</span></a><a href="products.html"><div class="ct"><img loading="lazy" decoding="async" alt="Paper cups" src="assets/img/doop/s42i_1wWn0.webp"></div><span>Paper cups</span></a></div></section>
+<section class="pad sec" id="new"><div class="row"><h2 class="l">New products</h2><a class="btn dark" href="products.html">Shop now →</a></div><div class="ng"><div class="np"><a href="product.html"><div class="ct sq"><img loading="lazy" decoding="async" alt="Brown ripple wall hot coffee cup" src="assets/img/doop/s42i_1wWn0.webp"></div><div class="tg"><i>8 oz</i><i>12 oz</i></div><h4>Brown ripple wall hot coffee cup</h4></a><div class="pf"><p>From <b>QAR 148</b> / carton</p><button class="add" data-add="cup">+ Add</button></div></div><div class="np"><a href="product.html"><div class="ct sq"><img loading="lazy" decoding="async" alt="Kraft food box" src="assets/img/doop/y65bHBOoQh.webp"></div><div class="tg"><i>Small</i><i>Medium</i></div><h4>Kraft food box</h4></a><div class="pf"><p>From <b>QAR 210</b> / carton</p><button class="add" data-add="box">+ Add</button></div></div><div class="np"><a href="product.html"><div class="ct sq"><img loading="lazy" decoding="async" alt="Kraft deli box (KDB)" src="assets/img/doop/_bXvhZgME-.webp"></div><div class="tg"><i>Small</i><i>Medium</i></div><h4>Kraft deli box (KDB)</h4></a><div class="pf"><p>From <b>QAR 96</b> / carton</p><button class="add" data-add="box">+ Add</button></div></div><div class="np"><a href="product.html"><div class="ct sq"><img loading="lazy" decoding="async" alt="Bagasse burger box" src="assets/img/doop/At8aE0gtmS.webp"></div><div class="tg"><i>500 ml</i><i>750 ml</i></div><h4>Bagasse burger box</h4></a><div class="pf"><p>From <b>QAR 260</b> / carton</p><button class="add" data-add="bagasse">+ Add</button></div></div></div></section>
+<section class="pad sec"><div class="b2"><div class="bx a"><div><div><h3>Custom printed bags and cups</h3><p>From 500 pieces.</p></div><a class="btn w" href="request-for-quote.html">Start customising →</a></div><div class="ct"><img loading="lazy" decoding="async" alt="Printed paper lunch box" src="assets/img/doop/UxehFNMs44.webp"></div></div>
+<div class="bx b"><div><div><h3>Contract pricing for regular orders</h3><p>Fixed prices and monthly delivery.</p></div><a class="btn" href="contact.html">Talk to sales →</a></div><div class="ct"><img loading="lazy" decoding="async" alt="Printed paper hamburger box" src="assets/img/doop/hT7ZT9JHAJ.webp"></div></div></div></section>
+<section class="pad sec"><div class="cert"><h2 class="l">Certifications</h2><div class="c"><div class="cc"><img loading="lazy" decoding="async" alt="QA Certification Services, ISO 9001:2015" src="assets/img/doop/m7gV8acsup.svg"><div><b>ISO 9001:2015</b><span>Quality management</span></div></div><div class="cc"><img loading="lazy" decoding="async" alt="IAS accredited, ISO 22000:2018" src="assets/img/doop/NPsCQDAIJC.svg"><div><b>ISO 22000:2018</b><span>Food safety management</span></div></div></div></div></section>
+<section class="pad sec sol"><h2 class="l">The complete solutions for food packaging</h2><div><div class="pills"><a href="products.html">Eco bagasse</a><a href="products.html">Kraft products</a><a href="products.html">Paper cups</a><a href="products.html">Microwavable</a><a href="products.html">Aluminium</a></div></div></section>
+<section class="pad sec faq"><div><h2 class="l">Frequently asked questions</h2><a class="btn" href="faqs.html" style="margin-top:20px">View all →</a></div><div class="ls"><div class="acc open"><div class="ah">What types of packaging do you offer?</div><p>Eco bagasse, kraft, microwavable and aluminium containers, paper cups, plastic and clear cups, wraps, paper bags, tissues, gloves and cleaning materials.</p></div><div class="acc"><div class="ah">Do you deliver across Qatar?</div><p>Yes. Delivery within 48 hours across Doha. See our delivery areas.</p></div><div class="acc"><div class="ah">How do I place an order?</div><p>Add products to your request list and send it as a quote. We reply the same working day.</p></div><div class="acc"><div class="ah">Do you offer custom printing?</div><p>Yes. Custom logo print starts at 500 pieces.</p></div><div class="acc"><div class="ah">Do you offer sustainable packaging options?</div><p>Yes. Eco bagasse and kraft ranges are available.</p></div></div></section>
+</main>
+<footer><div class="pad"><div class="fh"><h2>Let's pack something better.</h2><div class="row" style="gap:10px"><a class="btn w" href="request-for-quote.html" style="color:var(--navy)">Request a quote →</a><a class="btn" href="https://wa.me/97470188064" style="color:#fff;border-color:rgba(255,255,255,.4)">WhatsApp us ↗</a></div></div>
+<div class="fg"><div><span class="mono" style="color:rgba(255,255,255,.72)">Newsletter</span><h3>Bulk deals and new eco ranges, once a month.</h3><div class="nl"><span>Business email address</span><b>→</b></div></div><div><h5>Shop</h5><ul><li><a href="products.html">Eco bagasse</a></li><li><a href="products.html">Kraft products</a></li><li><a href="products.html">Paper cups</a></li><li><a href="products.html">Microwavable</a></li><li><a href="products.html">Plastic &amp; clear cups</a></li><li><a href="products.html">Aluminium</a></li></ul></div><div><h5>Industries</h5><ul><li><a href="industries/cafes.html">Cafés &amp; Coffee</a></li><li><a href="industries/restaurants.html">Takeaway &amp; Restaurants</a></li><li><a href="industries/hotels.html">Hotels &amp; Caterers</a></li><li><a href="industries.html">Bakeries</a></li></ul></div><div><h5>Company</h5><ul><li><a href="about.html">About us</a></li><li><a href="blog.html">Blog</a></li><li><a href="reviews.html">Reviews</a></li><li><a href="about.html">Certifications</a></li><li><a href="contact.html">Careers</a></li></ul></div><div><h5>Help</h5><ul><li><a href="shipping-policy.html">Delivery areas</a></li><li><a href="request-for-quote.html">How quotes work</a></li><li><a href="faqs.html">Payment &amp; LPO</a></li><li><a href="refund-policy.html">Returns</a></li><li><a href="contact.html">Contact us</a></li></ul></div></div>
+<div class="fb"><div><span>© 2026 oslopack</span><a href="terms.html">Terms &amp; Conditions</a><a href="shipping-policy.html">Shipping</a><a href="refund-policy.html">Refunds</a><a href="privacy-policy.html">Privacy Policy</a></div><div style="color:#fff;font-weight:600"><a>Instagram</a><a>LinkedIn</a><a>Facebook</a></div></div><div class="wm" aria-hidden="true">oslopack</div></div></footer>
+<a class="wa" href="https://wa.me/97470188064" aria-label="WhatsApp"><svg width="22" height="22" viewBox="0 0 24 24" fill="#fff"><path d="M12 3a9 9 0 0 0-7.7 13.6L3 21l4.5-1.2A9 9 0 1 0 12 3zm4.6 12.3c-.2.6-1.2 1.1-1.7 1.2-.4.1-1 .1-1.6-.1-1.6-.5-3.300-1.700-4.400-3.400-.9-1.300-1.100-2.400-.9-3 .2-.6.8-1.200 1.300-1.300h.5c.2 0 .4 0 .6.4l.8 1.800c.1.2.1.4 0 .5l-.4.6c-.1.2-.2.3 0 .5.4.8 1.600 1.900 2.500 2.300.2.1.4 0 .5-.1l.6-.7c.2-.2.3-.2.5-.1l1.700.8c.2.1.4.2.4.4 0 .2 0 .8-.1 1.200z"/></svg></a>
+<script>
+(function(){
+var rm=matchMedia('(prefers-reduced-motion:reduce)').matches;
+/* text-swap on links and buttons that hold plain text */
+document.querySelectorAll('header nav a,.btn,.chips a>span:first-child,.fg li a,.top a').forEach(function(e){
+  if(e.children.length||!e.textContent.trim())return;var t=e.textContent.trim().replace(/"/g,'&quot;');
+  var host=e.closest('a,button');if(host&&!host.hasAttribute('aria-label'))host.setAttribute('aria-label',e.textContent.trim());
+  e.innerHTML='<span class="ts" aria-hidden="true" data-t="'+t+'"><span>'+t+'</span></span>';
+});
+if(rm)return;
+/* pause looping motion when out of view or tab hidden */
+[document.querySelector('.hero'),document.querySelector('.mq')].forEach(function(el){if(!el)return;
+  new IntersectionObserver(function(e){el.classList.toggle('off',!e[0].isIntersecting)}).observe(el)});
+document.addEventListener('visibilitychange',function(){document.documentElement.classList.toggle('bg',document.hidden)});
+/* scroll reveals */
+var sel='main section>*,.wc,.bl,.cg a,.np,.bx,.cc,footer .fh,.fg>div';
+var els=document.querySelectorAll(sel),io=new IntersectionObserver(function(en){
+  en.forEach(function(x){if(x.isIntersecting){x.target.classList.add('in');io.unobserve(x.target)}})
+},{rootMargin:'0px 0px -8% 0px',threshold:.08});
+els.forEach(function(e){var p=e.parentNode,i=[].indexOf.call(p.children,e);e.style.setProperty('--i',Math.min(i,6));e.classList.add('rv');io.observe(e)});
+/* rules draw in as they scroll into view */
+document.querySelectorAll('.about .v>div,.cert,.faq .ls').forEach(function(e){e.classList.add('dl');if(!e.classList.contains('rv')){io.observe(e)}});
+/* fly-to-request: the product image arcs to the cart when an item is confirmed */
+var src=null,last=0,cnt=document.querySelector('[data-request-count]'),prev=cnt?(+cnt.textContent||0):0;
+document.addEventListener('click',function(e){var b=e.target.closest('.np [data-add]');if(b){src=b.closest('.np').querySelector('img');last=Date.now()}},true);
+function fly(im){var cart=document.querySelector('.ib[data-open-request]');if(!cart||!im)return;
+  var a=im.getBoundingClientRect(),c=cart.getBoundingClientRect(),el=im.cloneNode();
+  el.removeAttribute('loading');el.style.cssText='position:fixed;z-index:300;pointer-events:none;margin:0;object-fit:contain;padding:'+getComputedStyle(im).padding+';left:'+a.left+'px;top:'+a.top+'px;width:'+a.width+'px;height:'+a.height+'px';
+  document.body.appendChild(el);
+  var dx=c.left+c.width/2-(a.left+a.width/2),dy=c.top+c.height/2-(a.top+a.height/2);
+  var an=el.animate([{transform:'translate(0,0) scale(1)',opacity:1},{transform:'translate('+dx*.5+'px,'+(dy*.5-90)+'px) scale(.6)',opacity:1,offset:.5},{transform:'translate('+dx+'px,'+dy+'px) scale(.12)',opacity:.2}],{duration:750,easing:'cubic-bezier(.4,0,.2,1)'});
+  an.onfinish=function(){el.remove();cart.animate([{transform:'scale(1)'},{transform:'scale(1.18)'},{transform:'scale(1)'}],{duration:350,easing:'ease-out'})};
+}
+if(cnt)new MutationObserver(function(){var n=+cnt.textContent||0;if(n>prev&&src&&Date.now()-last<120000){fly(src);src=null}prev=n}).observe(cnt,{childList:true,characterData:true,subtree:true});
+/* characters follow the pointer (rAF-throttled) */
+var h=document.querySelector('.hero'),q=0,mx=0,my=0;
+if(h&&matchMedia('(pointer:fine)').matches){
+  h.addEventListener('pointermove',function(e){var r=h.getBoundingClientRect();mx=(e.clientX-r.left)/r.width*2-1;my=(e.clientY-r.top)/r.height*2-1;
+    if(!q)q=requestAnimationFrame(function(){h.style.setProperty('--mx',mx.toFixed(3));h.style.setProperty('--my',my.toFixed(3));q=0})});
+  h.addEventListener('pointerleave',function(){h.style.setProperty('--mx',0);h.style.setProperty('--my',0)});
+}
+})();
+</script>
+<script src="assets/js/site.js" defer></script>
+<script src="assets/js/request-drawer.js" defer></script>
+<script src="assets/js/ui.js" defer></script>
+</body></html>
