@@ -21,6 +21,23 @@
   };
   var QUICK = [1, 5, 10, 20, 50];
   var KEY = 'oslopack-request';
+  // Products registered by shop cards (name/price/image come from the card). Stored so saved items survive a reload.
+  var DEFKEY = KEY + '-defs';
+  var normDef = function (id, d) {
+    if (!/^[a-z0-9-]{1,80}$/.test(id) || !d || typeof d !== 'object') return null;
+    var price = Number(d.price), name = typeof d.name === 'string' ? d.name.slice(0, 120) : '', img = typeof d.img === 'string' ? d.img : '';
+    if (!name || !isFinite(price) || price <= 0 || price > 1e6 || !/^assets\/[\w\-./]+$/.test(img)) return null;
+    var sizes = Array.isArray(d.sizes) ? d.sizes.filter(function (z) { return typeof z === 'string' && z; }).slice(0, 8).map(function (z) { return z.slice(0, 30); }) : [];
+    return { name: name, sub: '', per: 'carton', unit: 'pcs', pcs: 0, price: price, img: img, opts: sizes.length ? [['Size', sizes, 0]] : [], def: { name: name, price: price, img: img, sizes: sizes } };
+  };
+  var defs = {};
+  try {
+    var rd = JSON.parse(localStorage.getItem(DEFKEY) || '{}');
+    if (rd && typeof rd === 'object' && !Array.isArray(rd)) Object.keys(rd).forEach(function (k) {
+      if (Object.prototype.hasOwnProperty.call(PRODUCTS, k)) return;
+      var n = normDef(k, rd[k]); if (n) { PRODUCTS[k] = n; defs[k] = n.def; }
+    });
+  } catch (e) {}
   var items = [];
   try {
     var raw = JSON.parse(localStorage.getItem(KEY) || '[]');
@@ -143,13 +160,13 @@
     var afterTotal = items.filter(function (i) { return i.id !== cur.id; }).reduce(function (s, i) { return s + PRODUCTS[i.id].price * i.qty; }, 0) + line;
     box.innerHTML = header('Add to request') +
       '<div class="rq-b"><div class="rq-prow"><div class="im"><img src="' + ROOT + p.img + '" alt="' + esc(p.name) + '"></div><div><h3>' + p.name + '</h3><div class="m">' + p.sub + '</div><div class="pr">' + fmt(p.price) + ' <span>/ ' + p.per + '</span></div></div></div>' +
-      opts + '<div class="rq-lbl">Quantity <span>Cartons of ' + p.pcs.toLocaleString('en-US') + '</span></div>' +
+      opts + '<div class="rq-lbl">Quantity <span>' + (p.pcs ? 'Cartons of ' + p.pcs.toLocaleString('en-US') : 'Priced per carton') + '</span></div>' +
       '<div class="rq-step"><button data-act="dec" aria-label="Fewer">−</button><div class="v">' + cur.qty + '<small>cartons</small></div><button data-act="inc" aria-label="More">+</button></div>' +
       '<div class="rq-qk">' + QUICK.map(function (q) { return '<button class="rq-o' + (cur.qty === q ? ' on' : '') + '" data-q="' + q + '">' + q + (q === 50 ? ' · free delivery' : '') + '</button>'; }).join('') + '</div>' +
-      '<div class="rq-est"><span>' + (cur.qty * p.pcs).toLocaleString('en-US') + ' ' + p.unit + ' · indicative price</span><b>' + fmt(line) + '</b></div></div>' +
+      '<div class="rq-est"><span>' + (p.pcs ? (cur.qty * p.pcs).toLocaleString('en-US') + ' ' + p.unit + ' · ' : '') + 'indicative price</span><b>' + fmt(line) + '</b></div></div>' +
       '<div class="rq-f"><div class="rq-sum"><span>Your request after adding: <b style="font-size:14px">' + after + ' item' + (after > 1 ? 's' : '') + '</b></span><span>Est. <b>' + fmt(afterTotal) + '</b></span></div>' +
       '<button class="rq-btn" data-act="add">Add to request · ' + cur.qty + ' cartons</button><div class="rq-note">No payment now. Our team confirms price and delivery.</div></div>';
-    announce(cur.qty + ' carton' + (cur.qty > 1 ? 's' : '') + ', ' + (cur.qty * p.pcs).toLocaleString('en-US') + ' ' + p.unit + ', ' + fmt(line));
+    announce(cur.qty + ' carton' + (cur.qty > 1 ? 's' : '') + ', ' + (p.pcs ? (cur.qty * p.pcs).toLocaleString('en-US') + ' ' + p.unit + ', ' : '') + fmt(line));
   }
 
   function viewReview() {
@@ -160,7 +177,7 @@
     }
     var list = items.map(function (i, idx) {
       var p = PRODUCTS[i.id];
-      return '<div class="rq-it"><div class="im"><img src="' + ROOT + p.img + '" alt=""></div><div><h4>' + p.name + '</h4><div class="m">' + (i.qty * p.pcs).toLocaleString('en-US') + ' ' + p.unit + '</div>' +
+      return '<div class="rq-it"><div class="im"><img src="' + ROOT + p.img + '" alt=""></div><div><h4>' + p.name + '</h4><div class="m">' + (p.pcs ? (i.qty * p.pcs).toLocaleString('en-US') + ' ' + p.unit : i.qty + ' carton' + (i.qty > 1 ? 's' : '')) + '</div>' +
         '<div class="st"><button data-act="idec" data-i="' + idx + '" aria-label="Fewer">−</button><span>' + i.qty + '</span><button data-act="iinc" data-i="' + idx + '" aria-label="More">+</button></div></div>' +
         '<div class="pr">' + fmt(p.price * i.qty) + '<button data-act="rm" data-i="' + idx + '">Remove</button></div></div>';
     }).join('');
@@ -228,7 +245,11 @@
   // Direct add without opening the drawer: used by the home page product cards.
   // Adds one carton with default options (or one more carton if already added). Returns the line count.
   window.opRequest = window.opRequest || {};
-  window.opRequest.quickAdd = function (id) {
+  window.opRequest.quickAdd = function (id, def) {
+    if (!Object.prototype.hasOwnProperty.call(PRODUCTS, id) && def) {
+      var n = normDef(id, def);
+      if (n) { PRODUCTS[id] = n; defs[id] = n.def; try { localStorage.setItem(DEFKEY, JSON.stringify(defs)); } catch (e) {} }
+    }
     var p = PRODUCTS[id]; if (!p) return items.length;
     var ex = items.filter(function (x) { return x.id === id; })[0];
     if (ex) ex.qty = Math.min(999, ex.qty + 1);
